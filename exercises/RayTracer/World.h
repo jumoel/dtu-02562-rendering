@@ -54,6 +54,12 @@ public:
 	{
 		light_source_list.push_back(ls);
 	};
+
+	/* Get the list of lights in the world
+	 */
+	const std::vector<LightSource*>& get_light() {
+	  return light_source_list;
+	}
   
 	/// Add an object to our world
 	void add_object(Object3D* o3d)
