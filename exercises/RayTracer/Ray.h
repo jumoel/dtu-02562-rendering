@@ -18,7 +18,14 @@ const float DEFAULT_REFRACTION_INDEX = 1.0;
 		but it also stores information. For instance the Ray remembers intersection
 		points, and the refraction index of material it is passing through. */
 class Ray
-{		
+{
+
+  /* Makes the reflected_ray and refracted_ray methods have as
+   * many rights as a method in a Ray object.
+   */
+  friend Ray reflected_ray(const Ray& r, const CGLA::Vec3f& N);
+  friend Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi);
+
 	/// Origin of the ray
 	const CGLA::Vec3f origin;
 
