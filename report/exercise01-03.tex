@@ -1,0 +1,95 @@
+
+\section{Ugeopgave 1-3}
+\label{sec:ugeopgave-1-3}
+
+Denne ugeopgave beskæftigede sig med forståelse og videreudvikling af
+en raytracer.
+
+En raytracer er en metode til at beregne, hvordan 3D-scener vil
+fremstå. Selve \emph{tracingen} foregår ved at der udsendes en stråle
+fra øjet, der går igennem hver pixel i scenen. Denne stråle spores så,
+indtil den rammer et objekt, og returnerer farven, der er på det
+pågældende sted på det pågældende objekt. Idét objektets farve kan
+ændres, alt efter hvilke lyskilder, der peger på det, hvilke
+egenskaber objektet har (reflektionsgrad fx) samt hvilke objekter der
+er andre steder i scenen, sendes der fra ``nedslagspunktet'' en ny
+stråle ud, der besøger andre steder i scenen.
+
+Disse stråleudsendinger kan stoppes ved forskellige kriterier:
+
+\begin{itemize}
+\item Hvis strålen rammer en perfekt diffus overflade (da der ellers
+  skulle udsendes stråler i alle retninger og dermed uendeligt mange)
+\item Hvis strålen er over en hvis generation (dvs. at der fx fra Ã¸jet
+  maksimalt udsendes 5 stråler, for at finde værdien af én pixel)
+\item Hvis strålens energi ligger under en forudbestemt tærskel for
+  minimumsenergi
+\end{itemize}
+
+\subsection{Del 1: UML-diagram}
+\label{sec:del-1:-uml}
+
+Følgende er et begrænset UML-diagram over den udleverede raytracer:
+
+
+\subsection{Shade-funktionalitet}
+\label{sec:shade-funktionalitet}
+
+I raytraceren er de fem følgende termer implementeret:
+
+\begin{itemize}
+\item Omgivende lys (ambient light)
+\item Diffus reflektion (Lambertian shading)
+\item Specular highlights (Phong highlights)
+\item Specular reflections
+\item Transmission
+\end{itemize}
+
+De første tre er lokale betragtninger, og kræver derfor ikke
+rekursion, idet det ikke er nødvendigt at betragte resten af scenen
+for at beregne dem.
+
+I vores implementering, udsendes der ikke ``børnestråler'' ved perfekt
+diffuse overflader og desuden stoppes strålerne efter 5 generationer.
+
+Bortset fra begrænsningen på rekursionsdybden er al relevant kode
+foretaget i \texttt{Surface.cpp}.
+
+Alle ``bidrag'' fra de forskellige termer adderes og multipliceres til
+sidst med objektets grundfarve i det pågældende punkt.
+
+\paragraph{Omgivende lys}
+\label{sec:omgivende-lys}
+
+Dette er implementeret ved at multiplicere scenens omgivende lys med
+faktoren for omgivende lys, \texttt{k\_ambient}.
+
+\paragraph{Diffus reflektion}
+\label{sec:diffus-reflektion}
+
+Dette er implementeret direkte fra formlen, der er givet i bogen:
+
+\[
+k_{diffuse} \cdot (\mathbf{N} \cdot \mathbf{L}) \cdot I
+\]
+
+Hvor $\mathbf{N}$ er normalvektoren, $\mathbf{L}$ er lysvektoren og
+$I$ er lysintesiteterne i scenen.
+
+\paragraph{Specular (phong) highlights}
+\label{sec:spec-phong-highl}
+
+Dette er ligeledes implementeret direkte fra formlen i bogen:
+
+\[
+(\mathbf{N} \cdot \mathbf{H})^{n} \cdot k_{highlight} \cdot I
+\]
+
+I dette tilfælde er $\mathbf{H}$ den såkaldte halvejsvektor.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 
