@@ -44,14 +44,19 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
     L = lights[i]->get_position() - incident.get_position();
     L.normalize();
 
-    H = (L + V);
-    H.normalize();
+    Ray hardshadow = Ray(incident.get_position(), L);
+    world->first_intersection(hardshadow);
 
-    // Lambertian shading (ICG pp. 300-301)
-    I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
+    if(!hardshadow.did_hit()) {
+      H = (L + V);
+      H.normalize();
 
-    // Phong (specular) highlights (3CG p. 178)
-    I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
+      // Lambertian shading (ICG pp. 300-301)
+      I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
+
+      // Phong (specular) highlights (3CG p. 178)
+      I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
+    }
 
     // If the surface is NOT a perfectly diffuse surface, spawn a reflection ray
     if (k_diffuse < 1) {
