@@ -1,0 +1,9 @@
+01-01: no shade
+01-02: ambient
+01-03: lambertian
+01-04: ambient + lambertian
+01-05: specular
+01-06: ambient + lambertian + specular (all local)
+01-07: all local + reflection
+01-08: all local + reflection + transmission (all lights)
+01-09: all lights + hard shadows
