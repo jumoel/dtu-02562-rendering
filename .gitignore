@@ -1,2 +1,7 @@
-bin/
 #*#
+exercises/*/Debug
+exercises/*/Release
+bin/*.ilk
+bin/*.exe
+exercises/*/*.ncb
+exercises/*/*.user
