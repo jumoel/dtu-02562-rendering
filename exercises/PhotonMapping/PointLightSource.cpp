@@ -26,10 +26,10 @@ void PointLightSource::emit_photons() {
         length = x*x + y*y + z*z;
       } while ( length > 1 );
 
-      Vec3f d = Vec3f(x, y, z);
+      Vec3f d = -Vec3f(x, y, z);
       Vec3f p = get_position();
 
-      world->trace_photon(Ray(p, d), get_intensities() / world->get_photon_map()->get_max_photons());
+      world->trace_photon(Ray(p, d), get_intensities()); //   / world->get_photon_map()->get_max_photons()
 
       ne = ne + 1;
     }

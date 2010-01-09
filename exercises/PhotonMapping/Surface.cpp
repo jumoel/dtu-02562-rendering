@@ -45,15 +45,15 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
 
   // Ambient light contribution (ICG p. 300)
   I = k_ambient * world->get_ambient();
-/*
+
   for (int i = 0; i < lights.size(); i++) {
     L = lights[i]->get_position() - incident.get_position();
     L.normalize();
 
-    Ray hardshadow = Ray(incident.get_position(), L);
-    world->first_intersection(hardshadow);
+    //Ray hardshadow = Ray(incident.get_position(), L);
+    //world->first_intersection(hardshadow);
 
-    if(!hardshadow.did_hit()) {
+    //if(!hardshadow.did_hit()) {
       H = (L + V);
       H.normalize();
 
@@ -62,7 +62,7 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
 
       // Phong (specular) highlights (3CG p. 178)
       I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
-    }
+    //}
 
     // If the surface is NOT a perfectly diffuse surface, spawn a reflection ray
     if (k_diffuse < 1) {
@@ -81,12 +81,9 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
     }
 
   }
-*/
-  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 10, 200);
-  if (irr.length() > 0.0)
-    printf("%f - %f - %f\n", irr[0], irr[1], irr[2]);
 
-  I = k_ambient*world->get_ambient();
+  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
+
   I += k_diffuse * irr;
 		
   return I * color;
@@ -129,7 +126,7 @@ Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi) {
 void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power, const bool is_solid) const
 {
   if (k_diffuse > 0) {
-    world->get_photon_map()->store(power, r.get_position(), normal);
+    world->get_photon_map()->store(power, r.get_position(), r.get_direction());
   }
 
   Vec3f N;
@@ -140,7 +137,7 @@ void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power
   } else {
     N = normal;
   }
-
+  
   float random = rand01();
 
   // diffuse reflection

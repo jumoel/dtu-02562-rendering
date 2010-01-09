@@ -177,7 +177,6 @@ int main(int argc, char* argv[])
   printf("Building photon map...");
   timer.start();
   ls->emit_photons();
-  w->get_photon_map()->balance();
   printf("Done!\n");
   printf("Photon map took %f seconds\n", timer.get_secs());
   printf("Photon map contains %d elements\n", w->get_photon_map()->getPhotonCount());

@@ -38,7 +38,7 @@ public:
   
 	World():
 		object_list(0), light_source_list(0),
-		caustic_photons(10000)
+		caustic_photons(100000)
 	{};
 
 	/// Set & get ambient level
