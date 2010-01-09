@@ -11,30 +11,30 @@ using namespace CMN;
 class tot_int_refl_exception { };
 
 float rand01()
-  {
-    return rand()/static_cast<float>(RAND_MAX);
-  }
+{
+  return rand()/static_cast<float>(RAND_MAX);
+}
 
 Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_solid) const
 {
   /* I is the intensity factor which gets multiplied with the
-   * color of the object.
-   */
+  * color of the object.
+  */
   Vec3f I = Vec3f();
-	
+
   /* The vectors used by the Phong lighting model.
-   * See p. 298 and pp. 303-304 in "Interactive Computer
-   * Graphics" (ICG) and for an explanaition of the vectors.
-   * Also see chapter 6.2.1 in "3D Computer Graphics" (3CG).
-   */
+  * See p. 298 and pp. 303-304 in "Interactive Computer
+  * Graphics" (ICG) and for an explanaition of the vectors.
+  * Also see chapter 6.2.1 in "3D Computer Graphics" (3CG).
+  */
   Vec3f L, N, V, H;
 
   /* A list of all the lights in the world.
-   */
+  */
   const vector<LightSource*>& lights = world->get_light();
 
   /* The normal vector must always be pointing outwards.
-   */
+  */
   if (dot(normal, incident.get_direction()) > 0) {
     N = - normal;
   } else {
@@ -44,25 +44,21 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
   V = -incident.get_direction();
 
   // Ambient light contribution (ICG p. 300)
-  I = k_ambient * world->get_ambient();
+  float AMBIENT_DOWNSCALE = 0.5;
+  I = AMBIENT_DOWNSCALE * k_ambient * world->get_ambient();
 
   for (int i = 0; i < lights.size(); i++) {
     L = lights[i]->get_position() - incident.get_position();
     L.normalize();
 
-    //Ray hardshadow = Ray(incident.get_position(), L);
-    //world->first_intersection(hardshadow);
+    H = (L + V);
+    H.normalize();
 
-    //if(!hardshadow.did_hit()) {
-      H = (L + V);
-      H.normalize();
+    // Lambertian shading (ICG pp. 300-301)
+    I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
 
-      // Lambertian shading (ICG pp. 300-301)
-      I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
-
-      // Phong (specular) highlights (3CG p. 178)
-      I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
-    //}
+    // Phong (specular) highlights (3CG p. 178)
+    I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
 
     // If the surface is NOT a perfectly diffuse surface, spawn a reflection ray
     if (k_diffuse < 1) {
@@ -85,12 +81,12 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
   Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
 
   I += k_diffuse * irr;
-		
+
   return I * color;
 }
 
 /* Calculates a reflected ray off a diffuse surface.
- * See 3CG p. 24. */
+* See 3CG p. 24. */
 Ray reflected_ray(const Ray& r, const CGLA::Vec3f& N) {
   // The minus is because the L vector is opposite of the
   // incident direction.
@@ -102,7 +98,7 @@ Ray reflected_ray(const Ray& r, const CGLA::Vec3f& N) {
 }
 
 /* Calculates a refracted ray off a transparent surface.
- * See 3CG p. 24. and refr.pdf ("Heckbert's method") */
+* See 3CG p. 24. and refr.pdf ("Heckbert's method") */
 Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi) {
   double n = (refi == r.media_refi) ? r.media_refi : r.media_refi / refi;
 
@@ -120,7 +116,7 @@ Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi) {
   Vec3f T = n * I + (n*c1 - c2) * N;
 
   return Ray(r.get_position(), T, r.get_level() + 1, refi);
- }
+}
 
 
 void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power, const bool is_solid) const
@@ -137,16 +133,31 @@ void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power
   } else {
     N = normal;
   }
-  
+
   float random = rand01();
 
   // diffuse reflection
   if (random < k_reflected) {
-    Ray reflect = reflected_ray(r, N);
+    //Ray reflect = reflected_ray(r, N);
+    float e0 = rand01();
+    float e1 = rand01();
+    float cost = sqrt(e0);
+    float sint = sqrt(1.f - e0);
+    float cosp = cos(e1 * 2.f * float(M_PI));
+    float sinp = sin(e1 * 2.f * float(M_PI));
+    Vec3f x, y, z = normal;
+    Vec3f dir(sint*cosp, sint*sinp, cost);
+    orthogonal(z, x, y);
+    Vec3f out = dir[0]*x + dir[1]*y + dir[2]*z;
 
-    world->trace_photon(reflect, power);
+    world->trace_photon(Ray(r.get_position(), out, r.get_level() + 1), power);
   }
   // refraction
   else if(random < k_reflected + k_transmitted) {
+    try {
+      Ray refracted = refracted_ray(r, N, refraction_index);
+
+      world->trace_photon(refracted, power);
+    } catch (tot_int_refl_exception) { }
   }
 }
