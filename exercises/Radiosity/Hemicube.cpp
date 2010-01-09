@@ -19,7 +19,8 @@ Hemicube::~Hemicube() {
 	delete [] data;
 }
 
-void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_callback callback) {
+void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_callback callback)
+{
 	int quater1_size = size/2;
 	int quater2_size = 2 * quater1_size;
 	int quater3_size = 3 * quater1_size;
@@ -43,8 +44,10 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glViewport(quater1_size,quater1_size,quater2_size,quater2_size);
 	glLoadIdentity();
 	gluLookAt(eye[0],eye[1],eye[2],
-						eye[0] + direction[0],eye[1] + direction[1],eye[2] + direction[2],
-						up[0],up[1],up[2]); 
+		  eye[0] + direction[0],
+		  eye[1] + direction[1],
+		  eye[2] + direction[2],
+		  up[0],up[1],up[2]); 
 	callback(); // render scene;
 
 
@@ -57,8 +60,8 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glViewport(0,quater1_size,quater1_size,quater2_size);
 	glLoadIdentity();
 	gluLookAt(eye[0],eye[1],eye[2],
-						eye[0] + right[0],eye[1] + right[1],eye[2] + right[2],
-						up[0],up[1],up[2]); 
+		  eye[0] + right[0],eye[1] + right[1],eye[2] + right[2],
+		  up[0],up[1],up[2]); 
 	callback(); // render scene;
 
 	// Left
@@ -69,8 +72,8 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glViewport(quater3_size,quater1_size,quater1_size,quater2_size);
 	glLoadIdentity();
 	gluLookAt(eye[0],eye[1],eye[2],
-						eye[0] - right[0],eye[1] - right[1],eye[2] - right[2],
-						up[0],up[1],up[2]); 
+		  eye[0] - right[0],eye[1] - right[1],eye[2] - right[2],
+		  up[0],up[1],up[2]); 
 	callback(); // render scene;
 
 
@@ -82,8 +85,8 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glViewport(quater1_size,0,quater2_size,quater1_size);
 	glLoadIdentity();
 	gluLookAt(eye[0],eye[1],eye[2],
-						eye[0] - up[0],eye[1] - up[1],eye[2] - up[2],
-						direction[0],direction[1],direction[2]); 
+		  eye[0] - up[0],eye[1] - up[1],eye[2] - up[2],
+		  direction[0],direction[1],direction[2]); 
 	callback(); // render scene;
 
 	// Up
@@ -94,8 +97,8 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glViewport(quater1_size,quater3_size,quater2_size,quater1_size);
 	glLoadIdentity();
 	gluLookAt(eye[0],eye[1],eye[2],
-						eye[0] + up[0],eye[1] + up[1],eye[2] + up[2],
-						-direction[0],-direction[1],-direction[2]); 
+		  eye[0] + up[0],eye[1] + up[1],eye[2] + up[2],
+		  -direction[0],-direction[1],-direction[2]); 
 	callback(); // render scene;
 
 	glMatrixMode(GL_PROJECTION);
@@ -105,70 +108,83 @@ void Hemicube::renderScene(Vec3f eye, Vec3f up, Vec3f direction, render_scene_ca
 	glPopMatrix();
 
 	glFinish();
-
 }
 
-void Hemicube::readIndexBuffer() {
-
-	glReadPixels((GLint)0,(GLint)0,rendersize,rendersize,GL_RGB, GL_UNSIGNED_BYTE, data);	
-	/****************
-	GFX::PPMBitmap blob(rendersize,rendersize);
-	glReadPixels((GLint)0,(GLint)0,rendersize,rendersize,GL_RGBA, GL_UNSIGNED_BYTE, blob.get());
-	blob.write("blob.ppm");
-	exit(0);
-	***************/
+void Hemicube::readIndexBuffer()
+{
+  glReadPixels((GLint)0,(GLint)0,rendersize,rendersize,GL_RGB, GL_UNSIGNED_BYTE, data);	
+  /****************
+  GFX::PPMBitmap blob(rendersize,rendersize);
+  glReadPixels((GLint)0,(GLint)0,rendersize,rendersize,GL_RGBA, GL_UNSIGNED_BYTE, blob.get());
+  blob.write("blob.ppm");
+  exit(0);
+  ***************/
 }
 
-unsigned int Hemicube::getIndex(int px, int py) {
-			
-	assert(px>=0 && px<rendersize);
-	assert(py>=0 && py<rendersize);
-		
- 	unsigned char r = (unsigned char)data[(rendersize*(py)+px)*3+0]; 
- 	unsigned char g = (unsigned char)data[(rendersize*(py)+px)*3+1]; 
- 	unsigned char b = (unsigned char)data[(rendersize*(py)+px)*3+2]; 
+unsigned int Hemicube::getIndex(int px, int py)
+{
+  assert(px>=0 && px<rendersize);
+  assert(py>=0 && py<rendersize);
 
-	return ((r*256)+g)*256+b;
-			
+  unsigned char r = (unsigned char)data[(rendersize*(py)+px)*3+0]; 
+  unsigned char g = (unsigned char)data[(rendersize*(py)+px)*3+1]; 
+  unsigned char b = (unsigned char)data[(rendersize*(py)+px)*3+2]; 
+
+  // cerr << " [" << static_cast<int>(r) << ','
+  //      << static_cast<int>(g) << ',' 
+  //      << static_cast<int>(b) << ']';
+
+  return ((r*256)+g)*256+b;		
 }
 
-float Hemicube::getDeltaFormFactor(int px, int py) {
-	float x,y,z;
+float Hemicube::getDeltaFormFactor(int px, int py)
+{
+  float x,y,z;
 	
-	float rs2 = (float)rendersize/2.0f;
+  float rs2 = (float)rendersize/2.0f;
 	
-	int quater1_size = size/2;
-	int quater2_size = 2 * quater1_size;
-	int quater3_size = 3 * quater1_size;
-	int quater4_size = 4 * quater1_size;
+  int quater1_size = size/2;
+  int quater2_size = 2 * quater1_size;
+  int quater3_size = 3 * quater1_size;
+  int quater4_size = 4 * quater1_size;
 
-	if (px>=quater1_size && px<=quater3_size-1 && py>=0 && py<=quater1_size-1) { // Area 1 = top
-		x=(float)(px-quater2_size)/(float)quater1_size;
-		y=(float)(py)/(float)quater1_size;
-		z=y;
-	} else if (px>=quater3_size && px<=quater4_size-1 && py>=quater1_size && py<=quater3_size-1) { // Area 2 = right
-		x=(float)(quater4_size-px)/(float)quater1_size;
-		y=(float)(py-quater2_size)/(float)quater1_size;
-		z=x;
-	} else if (px>=quater1_size && px<=quater3_size-1 && py>=quater3_size && py<=quater4_size-1) { // Area 3 = bottom
-		x=(float)(px-quater2_size)/(float)quater1_size;
-		y=(float)(quater4_size-py)/(float)quater1_size;
-		z=y;
-	} else if (px>=0 && px<=quater1_size-1 && py>=quater1_size && py<=quater3_size-1) { // Area 4 = left
-		x=(float)(px)/(float)quater1_size;
-		y=(float)(py-quater2_size)/(float)quater1_size;
-		z=x;
-	} else if (px>=quater1_size && px<=quater3_size-1 && py>=quater1_size && py<=quater3_size-1) { // Area 5 = center
-		x=(float)(px-quater2_size)/(float)quater1_size;
-		y=(float)(py-quater2_size)/(float)quater1_size;
-		z=1;
-	} else {
-		return 0;
-	}
+  if (px>=quater1_size && px<=quater3_size-1 && py>=0 && py<=quater1_size-1) 
+  { // Area 1 = top
+    x=(float)(px-quater2_size)/(float)quater1_size;
+    y=(float)(py)/(float)quater1_size;
+    z=y;
+  } 
+  else if (px>=quater3_size && px<=quater4_size-1 && py>=quater1_size && py<=quater3_size-1)
+  { // Area 2 = right
+    x=(float)(quater4_size-px)/(float)quater1_size;
+    y=(float)(py-quater2_size)/(float)quater1_size;
+    z=x;
+  } 
+  else if (px>=quater1_size && px<=quater3_size-1 && py>=quater3_size && py<=quater4_size-1)
+  { // Area 3 = bottom
+    x=(float)(px-quater2_size)/(float)quater1_size;
+    y=(float)(quater4_size-py)/(float)quater1_size;
+    z=y;
+  } 
+  else if (px>=0 && px<=quater1_size-1 && py>=quater1_size && py<=quater3_size-1)
+  { // Area 4 = left
+    x=(float)(px)/(float)quater1_size;
+    y=(float)(py-quater2_size)/(float)quater1_size;
+    z=x;
+  } 
+  else if (px>=quater1_size && px<=quater3_size-1 && py>=quater1_size && py<=quater3_size-1)
+  { // Area 5 = center
+    x=(float)(px-quater2_size)/(float)quater1_size;
+    y=(float)(py-quater2_size)/(float)quater1_size;
+    z=1;
+  }
+  else 
+  {
+    return 0;
+  }
 
-	float dist = x*x+y*y+1.0;
-	float dff = z/(M_PI*dist*dist*quater1_size*quater1_size);
+  float dist = x*x+y*y+1.0;
+  float dff = z/(M_PI*dist*dist*quater1_size*quater1_size);
 	
-	return dff; 
-
+  return dff; 
 }
