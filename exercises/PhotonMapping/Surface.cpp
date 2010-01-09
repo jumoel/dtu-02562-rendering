@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>  // For random number generator
 
 #include "World.h"
 #include "Surface.h"
@@ -8,6 +9,11 @@ using namespace std;
 using namespace CMN;
 
 class tot_int_refl_exception { };
+
+float rand01()
+  {
+    return rand()/static_cast<float>(RAND_MAX);
+  }
 
 Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_solid) const
 {
@@ -39,7 +45,7 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
 
   // Ambient light contribution (ICG p. 300)
   I = k_ambient * world->get_ambient();
-
+/*
   for (int i = 0; i < lights.size(); i++) {
     L = lights[i]->get_position() - incident.get_position();
     L.normalize();
@@ -75,6 +81,13 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
     }
 
   }
+*/
+  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 10, 200);
+  if (irr.length() > 0.0)
+    printf("%f - %f - %f\n", irr[0], irr[1], irr[2]);
+
+  I = k_ambient*world->get_ambient();
+  I += k_diffuse * irr;
 		
   return I * color;
 }
@@ -88,7 +101,7 @@ Ray reflected_ray(const Ray& r, const CGLA::Vec3f& N) {
 
   Vec3f R = 2 * dot(N, L) * N - L;
 
-  return Ray(r.get_position(), R, r.get_level() + 1);;
+  return Ray(r.get_position(), R, r.get_level() + 1);
 }
 
 /* Calculates a refracted ray off a transparent surface.
@@ -111,3 +124,32 @@ Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi) {
 
   return Ray(r.get_position(), T, r.get_level() + 1, refi);
  }
+
+
+void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power, const bool is_solid) const
+{
+  if (k_diffuse > 0) {
+    world->get_photon_map()->store(power, r.get_position(), normal);
+  }
+
+  Vec3f N;
+
+  // The normal must point outwards
+  if (dot(normal, r.get_direction()) > 0) {
+    N = - normal;
+  } else {
+    N = normal;
+  }
+
+  float random = rand01();
+
+  // diffuse reflection
+  if (random < k_reflected) {
+    Ray reflect = reflected_ray(r, N);
+
+    world->trace_photon(reflect, power);
+  }
+  // refraction
+  else if(random < k_reflected + k_transmitted) {
+  }
+}

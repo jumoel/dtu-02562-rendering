@@ -38,3 +38,16 @@ void World::direct_light(const Ray& incident,const CGLA::Vec3f& norm,
 
 }
 
+/*
+PHOTON MAPPING
+*/
+void World::trace_photon(Ray &ray, CGLA::Vec3f power)
+{
+  if (ray.get_level() > MAX_RECURSION_DEPTH)
+    return;
+
+  first_intersection(ray);
+  if (ray.did_hit()) {
+    (ray.intersected())->trace_photon(ray, power);
+  }
+}

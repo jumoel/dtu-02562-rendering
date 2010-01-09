@@ -69,6 +69,12 @@ public:
 										 const CGLA::Vec3f& normal,
 										 const bool is_solid) const;
 
+  /** Trace a photon. This function may trace rays recursively. */
+  void trace_photon( const Ray& incident,
+										        const CGLA::Vec3f& normal,
+                            const CGLA::Vec3f& power,
+										        const bool is_solid) const;
+
 
 };
 

@@ -114,6 +114,8 @@ public:
 	const CGLA::Vec3f photon_dir(
 		const Photon *p) const;            // the photon
 
+  int get_max_photons() { return max_photons; }
+
 };
 
 #endif // __PHOTONMAP_H__

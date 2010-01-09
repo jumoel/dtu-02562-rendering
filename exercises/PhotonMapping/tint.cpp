@@ -172,8 +172,15 @@ int main(int argc, char* argv[])
 	w->add_object(tri);
 
 	LightSource* ls = new PointLightSource(w, Vec3f(0,1,0), Vec3f(1,1,1));
-	w->add_light(ls);
+  w->add_light(ls);
 
+  printf("Building photon map...");
+  timer.start();
+  ls->emit_photons();
+  w->get_photon_map()->balance();
+  printf("Done!\n");
+  printf("Photon map took %f seconds\n", timer.get_secs());
+  printf("Photon map contains %d elements\n", w->get_photon_map()->getPhotonCount());
 
 	
 	// ---------------------------------------------------------------------- 

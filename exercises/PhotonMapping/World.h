@@ -38,7 +38,7 @@ public:
   
 	World():
 		object_list(0), light_source_list(0),
-		caustic_photons(1000000)
+		caustic_photons(10000)
 	{};
 
 	/// Set & get ambient level
@@ -55,6 +55,10 @@ public:
 		light_source_list.push_back(ls);
 	};
 
+  Photon_map* get_photon_map() {
+    return &caustic_photons;
+  }
+
 	/* Get the list of lights in the world
 	 */
 	const std::vector<LightSource*>& get_light() {
@@ -70,11 +74,14 @@ public:
 	/// Return the object that first intersects `ray'
 	float first_intersection(Ray& ray);
 
-	///
+	/// Shade a ray
 	CGLA::Vec3f shade_ray(Ray& ray);
 
 	/// Recursively trace a ray into the world
 	CGLA::Vec3f trace(Ray& ray);
+
+  /// Recursively trace a photon into the world
+  void trace_photon(Ray &ray, CGLA::Vec3f power);
 
 	/** Direct illumination. This function creates a set of samples from
 			light sources. Tests visibility using shadow rays. */

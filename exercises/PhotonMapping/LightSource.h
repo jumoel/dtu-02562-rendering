@@ -48,6 +48,7 @@ public:
 	/** Number of samples to cast from a given point towards the light source. */
 	virtual int get_no_samples() const {return 1;}
 
+  virtual void emit_photons() {};
 
 };
 
@@ -73,6 +74,8 @@ public:
 	}
 		
 	bool is_point_source() const {return true;}
+
+  void emit_photons();
 };
 
 #endif 

@@ -40,6 +40,12 @@ public:
 		CGLA::Vec3f point = ray.get_position();
 		return surf->shade(ray, get_normal(point), is_solid);
 	};
+
+  virtual void trace_photon(const Ray& ray, const CGLA::Vec3f& power) const 
+	{
+		CGLA::Vec3f point = ray.get_position();
+		return surf->trace_photon(ray, get_normal(point), power, is_solid);
+	};
   
 	/// Return the normal at a given point
 	virtual CGLA::Vec3f get_normal(const CGLA::Vec3f& v) const = 0;
