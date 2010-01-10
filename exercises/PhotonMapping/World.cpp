@@ -23,7 +23,7 @@ CGLA::Vec3f World::shade_ray(Ray& r)
 CGLA::Vec3f World::trace(Ray& ray)
 {
   if (ray.get_level() > MAX_RECURSION_DEPTH)
-    return Vec3f(0.0, 0.0, 0.0);
+    return background;
 
 	first_intersection(ray);
 	if (ray.did_hit())

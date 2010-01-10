@@ -252,9 +252,8 @@ void Photon_map :: store(
 	 Call this function after each light source is processed.		*/
 void Photon_map :: scale_photon_power( const float scale )		{
 	for (int i=prev_scale; i<=stored_photons ; i++)			{
-		photons[i].power[0] *= scale;
-		photons[i].power[1] *= scale; 
-		photons[i].power[2] *= scale;
+    Vec3f pow = photons[i].power;
+    photons[i].power = pow / scale;
 	}
 	prev_scale = stored_photons;
 }

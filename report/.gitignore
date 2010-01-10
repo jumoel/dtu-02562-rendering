@@ -5,3 +5,6 @@ auto/*
 *.pdf
 _region_.tex
 \#*#
+*.lof
+*.toc
+*.aux

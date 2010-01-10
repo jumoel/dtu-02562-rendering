@@ -1,20 +1,25 @@
 
-\section{Part 1}
+\chapter{Ugeopgave 5-7}
+
+\section{Del 1}
 \label{sec:ex5-1}
 
-Første opgave er at downloade kldekoden og compile den. Det skulle vise cornell scenen med uden radiosity. Scenen kan ses på figur \ref{figur-5-1-1}.
+Første opgave er at downloade kldekoden og compile den. Det skulle
+vise cornell scenen med uden radiosity. Scenen kan ses på figur
+\ref{figur-5-1-1}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=8cm]{screenshots/ex5/1.png}
-  \caption{}
+  \caption{hej}
   \label{figur-5-1-1}
 \end{figure}
 
-\section{Part 2}
+\section{Del 2}
 \label{sec:ex5-2}
 
-Dernæst skal scenen \textit{meshes}. På figur \ref{figur-5-2-1} kan vi se scenen delt op i mindre stykker med brug af mesher biblioteket.
+Dernæst skal scenen \textit{meshes}. På figur \ref{figur-5-2-1} kan vi
+se scenen delt op i mindre stykker med brug af mesher biblioteket.
 
 \begin{figure}[htbp]
   \centering
@@ -23,27 +28,35 @@ Dernæst skal scenen \textit{meshes}. På figur \ref{figur-5-2-1} kan vi se scenen
   \label{figur-5-2-1}
 \end{figure}
 
-\section{Part 3}
+\section{Del 3}
 \label{sec:ex5-3}
 
-I 3. del af opgaven skal vi lave \textit{progressive refinement}. Det kræver at vi implementerer følgende funktioner som skal bruger i hver itteration af main loopet:
+I 3. del af opgaven skal vi lave \textit{progressive refinement}. Det
+kræver at vi implementerer følgende funktioner som skal bruger i hver
+itteration af main loopet:
 
 
 \begin{itemize}
 
 \item En funktion der finder den \textit{patch} med størst energi.
 
-\item En funktion der udregner \textit{form factors} mellem en \textit{patch} og alle de andre \textit{patches}. Dette gøres analytisk.
+\item En funktion der udregner \textit{form factors} mellem en
+  \textit{patch} og alle de andre \textit{patches}. Dette gøres
+  analytisk.
 
-\item En funktion der distribuerer energi fra en \textit{patch} til alle andre \textit{patches}
+\item En funktion der distribuerer energi fra en \textit{patch} til
+  alle andre \textit{patches}
 
 \item En funktion der beregner farven af alle \textit{patches}.
 
 \end{itemize}
 
-Resultatet kan ses på figur \ref{figur-5-3-1}. Billedet viser tydeligt firkanter, men dette bliver bedre når vi har lavet opgave 4.
+Resultatet kan ses på figur \ref{figur-5-3-1}. Billedet viser tydeligt
+firkanter, men dette bliver bedre når vi har lavet opgave 4.
 
-Funktionerne ville vi lave i \texttt{ProgRef.cpp} men da der var nogle problemer med linking har vi været nødsaget til at flytte nogle af funktionerne op i headeren \texttt{ProgRef.h}.
+Funktionerne ville vi lave i \texttt{ProgRef.cpp} men da der var nogle
+problemer med linking har vi været nødsaget til at flytte nogle af
+funktionerne op i headeren \texttt{ProgRef.h}.
 
 \begin{figure}[htbp]
   \centering
@@ -52,10 +65,13 @@ Funktionerne ville vi lave i \texttt{ProgRef.cpp} men da der var nogle problemer
   \label{figur-5-3-1}
 \end{figure}
 
-\section{Part 4}
+\section{Del 4}
 \label{sec:ex5-4}
 
-Som nævn tidligere skal opgave 4 arbejde på at gøre billedets farveskift glattere. Vi implementerer derfor \textit{vertex radiosity} som kaldes \textit{nodal-averages}. Resultatet kan ses af figur \ref{figur-5-4-1}
+Som nævn tidligere skal opgave 4 arbejde på at gøre billedets
+farveskift glattere. Vi implementerer derfor \textit{vertex radiosity}
+som kaldes \textit{nodal-averages}. Resultatet kan ses af figur
+\ref{figur-5-4-1}
 
 
 \begin{figure}[htbp]
@@ -65,12 +81,17 @@ Som nævn tidligere skal opgave 4 arbejde på at gøre billedets farveskift glatter
   \label{figur-5-4-1}
 \end{figure}
 
-\section{Part 5}
+\section{Del 5}
 \label{sec:ex5-5}
 
-Nu vil vi gerne bruge \texttt{hemicube} metoden istedet for at beregne \textit{form factors} annalytisk. Derfor anvender vi \texttt{hemicube.h}. Nu har billedet fået skygger, modsat tidligere. Da vi hele tiden har anvendt scenen med kasserne i skifter vi ikke scene, men det er tydeligt at se forskellen.
+Nu vil vi gerne bruge \texttt{hemicube} metoden istedet for at beregne
+\textit{form factors} annalytisk. Derfor anvender vi
+\texttt{hemicube.h}. Nu har billedet fået skygger, modsat
+tidligere. Da vi hele tiden har anvendt scenen med kasserne i skifter
+vi ikke scene, men det er tydeligt at se forskellen.
 
-I figur \ref{figur-5-5-1} og \ref{figur-5-5-2} ser vi scenen med skygger med og uden \textit{nodal-averaging}.
+I figur \ref{figur-5-5-1} og \ref{figur-5-5-2} ser vi scenen med
+skygger med og uden \textit{nodal-averaging}.
 
 \begin{figure}[htbp]
   \centering
@@ -86,20 +107,30 @@ I figur \ref{figur-5-5-1} og \ref{figur-5-5-2} ser vi scenen med skygger med og 
   \label{figur-5-5-2}
 \end{figure}
 
-\section{Part 6}
+\section{Del 6}
 \label{sec:ex5-6}
 
-\textit{What is the effect of changing the subdivision level of the light source?}
+\textit{What is the effect of changing the subdivision level of the
+  light source?}
 
-Et lavt niveau vil resultere i \textit{patches} får et meget \texttt{unshot radiosity} som langsomt konvergerer mod nul og derfor forøjer tiden det tager at rendere. Der vil også opstå \textit{aliasing} problemer omkring lyskilden og kanten af skyggerne. Et for højt niveau ødelægger farve \textit{bleeding} og noget af skyggerne.
+Et lavt niveau vil resultere i \textit{patches} får et meget
+\texttt{unshot radiosity} som langsomt konvergerer mod nul og derfor
+forøjer tiden det tager at rendere. Der vil også opstå
+\textit{aliasing} problemer omkring lyskilden og kanten af
+skyggerne. Et for højt niveau ødelægger farve \textit{bleeding} og
+noget af skyggerne.
 
-\textit{What happens when the size of the hemicube is changed? Why does it happen? What can be done to avoid this problem?}
+\textit{What happens when the size of the hemicube is changed? Why
+  does it happen? What can be done to avoid this problem?}
 
-I figur \ref{figur-5-6-1} og \ref{figur-5-6-1} kan vi se hvad der sker når \texttt{hemicuben} er hhv. ekstremt stor og ekstremt lille.
+I figur \ref{figur-5-6-1} og \ref{figur-5-6-1} kan vi se hvad der sker
+når \texttt{hemicuben} er hhv. ekstremt stor og ekstremt lille.
 
-Der opstår fejl fordi der antages at \textit{patches} projicerer præcist over på et heltal pixels. Dette er sjældent tilfældet.
+Der opstår fejl fordi der antages at \textit{patches} projicerer
+præcist over på et heltal pixels. Dette er sjældent tilfældet.
 
-Man kan sætte opløsningen af hemicuben op, men det betyder også at alle der skal regnes langt mere.
+Man kan sætte opløsningen af hemicuben op, men det betyder også at
+alle der skal regnes langt mere.
 
 \begin{figure}[htbp]
   \centering
@@ -114,9 +145,13 @@ Man kan sætte opløsningen af hemicuben op, men det betyder også at alle der skal
   \label{figur-5-6-2}
 \end{figure}
 
-\textit{What effect can be captured using radiosity, that can not be captured using ray tracing?}
+\textit{What effect can be captured using radiosity, that can not be
+  captured using ray tracing?}
 
-\texttt{Radiosity} kan vise diffuse \textit{interreflections}, som bla. kan ses ved farvernes \texttt{bleed}, i modsætning til ray tracing. \texttt{Radiosity} kan håndtere LD*E hvor ray tracing bruger LD?S*E.
+\texttt{Radiosity} kan vise diffuse \textit{interreflections}, som
+bla. kan ses ved farvernes \texttt{bleed}, i modsætning til ray
+tracing. \texttt{Radiosity} kan håndtere LD*E hvor ray tracing bruger
+LD?S*E.
 
 
 

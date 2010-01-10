@@ -18,23 +18,23 @@ float rand01()
 Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_solid) const
 {
   /* I is the intensity factor which gets multiplied with the
-  * color of the object.
-  */
+   * color of the object.
+   */
   Vec3f I = Vec3f(0.0, 0.0, 0.0);
-
+	
   /* The vectors used by the Phong lighting model.
-  * See p. 298 and pp. 303-304 in "Interactive Computer
-  * Graphics" (ICG) and for an explanaition of the vectors.
-  * Also see chapter 6.2.1 in "3D Computer Graphics" (3CG).
-  */
+   * See p. 298 and pp. 303-304 in "Interactive Computer
+   * Graphics" (ICG) and for an explanaition of the vectors.
+   * Also see chapter 6.2.1 in "3D Computer Graphics" (3CG).
+   */
   Vec3f L, N, V, H;
 
   /* A list of all the lights in the world.
-  */
+   */
   const vector<LightSource*>& lights = world->get_light();
 
   /* The normal vector must always be pointing outwards.
-  */
+   */
   if (dot(normal, incident.get_direction()) > 0) {
     N = - normal;
   } else {
@@ -43,19 +43,45 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
 
   V = -incident.get_direction();
 
-  if (k_reflected > 0) {
-    Ray reflected = reflected_ray(incident, N);
-    I += k_reflected*world->trace(reflected);
+  // Ambient light contribution (ICG p. 300)
+  //I += k_ambient * world->get_ambient();
+
+  for (int i = 0; i < lights.size(); i++) {
+    L = lights[i]->get_position() - incident.get_position();
+    L.normalize();
+
+    Ray hardshadow = Ray(incident.get_position(), L);
+    world->first_intersection(hardshadow);
+
+    if(!hardshadow.did_hit()) {
+      H = (L + V);
+      H.normalize();
+
+      // Lambertian shading (ICG pp. 300-301)
+      //I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
+
+      // Phong (specular) highlights (3CG p. 178)
+      //I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
+    }
   }
 
+  // If the surface is NOT a perfectly diffuse surface, spawn a reflection ray
+  //if (k_diffuse < 1) {
+    Ray reflection = reflected_ray(incident, N);
+
+    I += k_reflected * world->trace(reflection);
+  //}
+
+  // Algorithm explanation in 3CG, p. 349
   if (refraction_index > 0) {
     try {
       Ray refracted = refracted_ray(incident, N, refraction_index);
-      I += k_transmitted * world->trace(refracted);
-    } catch(tot_int_refl_exception) { /* Aww :( */ }
-  }
 
-  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 1, 200);
+      I += k_transmitted * world->trace(refracted);
+    } catch (tot_int_refl_exception) { }
+  }
+		
+  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
 
   I += k_diffuse * irr;
 
@@ -112,10 +138,6 @@ void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power
   }
 
   float random = rand01();
-
-  /* TODO: Russisk roulette -> obsorber, reflekter eller transmitter
-   *       Russisk roulette -> specular eller diffus reflektion
-   */
 
   // diffuse reflection
   if (random < k_reflected) {

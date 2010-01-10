@@ -91,6 +91,8 @@ public:
 		return stored_photons;
 	}
 
+  Photon* get_photons() { return photons; }
+
 	void store(
 		const CGLA::Vec3f& power,               // photon power
 		const CGLA::Vec3f& pos,                 // photon position
