@@ -37,4 +37,3 @@ void PointLightSource::emit_photons() {
     world->get_photon_map()->scale_photon_power(world->get_photon_map()->getPhotonCount());
     world->get_photon_map()->balance();
 }
-

@@ -5,7 +5,7 @@
 #include <vector>
 #include <assert.h>
 #include "Object3D.h"
-#include "LightSource.h"
+#include "PointLightSource.h"
 #include "PhotonMap.h"
 
 typedef std::vector<Object3D*>::iterator    Object3DPtrIterator;
