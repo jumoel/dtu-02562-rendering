@@ -23,11 +23,12 @@ CGLA::Vec3f World::shade_ray(Ray& r)
 CGLA::Vec3f World::trace(Ray& ray)
 {
   if (ray.get_level() > MAX_RECURSION_DEPTH)
-    return background;
+    return Vec3f(0.0, 0.0, 0.0);
 
 	first_intersection(ray);
 	if (ray.did_hit())
 		return (ray.intersected())->shade(ray);
+
 	// Return the background color.
 	return background;
 }
