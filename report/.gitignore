@@ -8,3 +8,4 @@ _region_.tex
 *.lof
 *.toc
 *.aux
+*.tex~
