@@ -51,11 +51,14 @@ class Ray
 	float media_refi;
 
 public:
+
+  bool first_intersection;
+  bool caustic;
   
 	/** Construct a ray. First argument is position. Second argument
 			is the direction of the ray. The magnitude of the second argument
 			is construed as the step length. */  
-	Ray(const CGLA::Vec3f& p, const CGLA::Vec3f& d, 
+	Ray(const CGLA::Vec3f& p, const CGLA::Vec3f& d,
 			int _level=0, float _media_refi = DEFAULT_REFRACTION_INDEX):
 		origin(p),
 		direction(d),
@@ -66,6 +69,10 @@ public:
 	{
 		direction.normalize();
 	}
+
+    void set_first() { first_intersection = true; }
+    void set_caustic() { caustic = true; }
+    void unset_caustic() { caustic = false; }
     
 	/// Get ray position.
 	const CGLA::Vec3f get_position() const {return origin+t*direction;}

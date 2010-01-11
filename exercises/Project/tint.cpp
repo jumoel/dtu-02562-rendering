@@ -11,6 +11,9 @@
 #include "Triangle.h"
 #include "Plane.h"
 #include "Surface.h"
+#include "LightSource.h"
+#include "PointLightSource.h"
+#include "AreaLightSource.h"
 
 using namespace CMN;
 using namespace CMP;
@@ -171,7 +174,14 @@ int main(int argc, char* argv[])
 															 Vec3f(-.2,.1,-.1), s3);
 	w->add_object(tri);
 
-	LightSource* ls = new PointLightSource(w, Vec3f(0,1,0), Vec3f(1,1,1));
+  //LightSource* ls = new PointLightSource(w, Vec3f(0,1,0), Vec3f(1,1,1));
+  Vec3f corners[4];
+  corners[3] = Vec3f( 0.1, 1.0,  0.1);
+  corners[2] = Vec3f(-0.1, 1.0,  0.1);
+  corners[1] = Vec3f( 0.1, 1.0, -0.1);
+  corners[0] = Vec3f(-0.1, 1.0, -0.1);
+  LightSource* ls = new AreaLightSource(w, corners, 12, Vec3f(1,1,1));
+  
   w->add_light(ls);
 
   printf("Building photon map...");
@@ -179,7 +189,8 @@ int main(int argc, char* argv[])
   ls->emit_photons();
   printf("Done!\n");
   printf("Photon map took %f seconds\n", timer.get_secs());
-  printf("Photon map contains %d elements\n", w->get_photon_map()->getPhotonCount());
+  printf("Global photon map contains %d elements\n", w->get_global_photon_map()->getPhotonCount());
+  printf("Caustic photon map contains %d elements\n", w->get_caustic_photon_map()->getPhotonCount());
 
 	
 	// ---------------------------------------------------------------------- 

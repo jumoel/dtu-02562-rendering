@@ -16,7 +16,7 @@ public:
 									 const CGLA::Vec3f& ints): 
 		LightSource(_world,ints),	position(pos) {}
   
-	CGLA::Vec3f get_position() const {return position;}
+	CGLA::Vec3f get_position() {return position;}
 	CGLA::Vec3f get_normal() const 
 	{
 		assert(0);

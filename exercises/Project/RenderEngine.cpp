@@ -17,6 +17,7 @@ const Vec3f RenderEngine::trace_ray(const Vec2f& pi)
 	Vec2f p = canvas->window_coords2image_coords(pi);
 	Vec3f r_dir = normalize(camera->get_ray_direction(p));
 	Ray r(camera->get_position(),r_dir);
+  r.set_first();
 	return world->shade_ray(r);
 }
 

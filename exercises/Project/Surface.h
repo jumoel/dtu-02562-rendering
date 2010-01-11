@@ -71,9 +71,15 @@ public:
 
   /** Trace a photon. This function may trace rays recursively. */
   void trace_photon( const Ray& incident,
-										        const CGLA::Vec3f& normal,
-                            const CGLA::Vec3f& power,
-										        const bool is_solid) const;
+										 const CGLA::Vec3f& normal,
+                     const CGLA::Vec3f& power,
+										 const bool is_solid) const;
+
+  /** Trace a caustic photon. This function may trace rays recursively. */
+  void trace_caustic_photon( const Ray& incident,
+										         const CGLA::Vec3f& normal,
+                             const CGLA::Vec3f& power,
+										         const bool is_solid) const;
 
 
 };

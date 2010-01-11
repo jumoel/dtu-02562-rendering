@@ -40,33 +40,39 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
   V = -incident.get_direction();
 
   // Ambient light contribution (ICG p. 300)
-  //I += k_ambient * world->get_ambient();
+  I += k_ambient * world->get_ambient();
 
   for (int i = 0; i < lights.size(); i++) {
-    L = lights[i]->get_position() - incident.get_position();
-    L.normalize();
+    LightSource *light = lights[i];
 
-    Ray hardshadow = Ray(incident.get_position(), L);
-    world->first_intersection(hardshadow);
+    for (int j = 0; j < light->get_no_samples(); j++) {
+      L = light->get_position() - incident.get_position();
+      L.normalize();
 
-    if(!hardshadow.did_hit()) {
-      H = (L + V);
-      H.normalize();
+      Ray shadow = Ray(incident.get_position(), L);
+      world->first_intersection(shadow);
 
-      // Lambertian shading (ICG pp. 300-301)
-      //I += k_diffuse * dot(N, L) * lights[i]->get_intensities();
+      if(!shadow.did_hit()) {
+        //H = 2*dot(normal, L)*normal - L;
+        H = (L + V);
+        H.normalize();
 
-      // Phong (specular) highlights (3CG p. 178)
-      //I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities();
+        // Lambertian shading (ICG pp. 300-301)
+        I += k_diffuse * dot(N, L) * lights[i]->get_intensities() / light->get_no_samples();
+
+        // Phong (specular) highlights (3CG p. 178)
+        I += k_highlight * pow(dot(N, H), phong_exponent) * lights[i]->get_intensities() / light->get_no_samples();
+        //I += k_highlight * pow(dot(H,V), phong_exponent) * lights[i]->get_intensities() / light->get_no_samples();
+      }
     }
   }
 
   // If the surface is NOT a perfectly diffuse surface, spawn a reflection ray
-  //if (k_diffuse < 1) {
+  /*if (k_diffuse < 1) {
     Ray reflection = reflected_ray(incident, N);
 
     I += k_reflected * world->trace(reflection);
-  //}
+  }*/
 
   // Algorithm explanation in 3CG, p. 349
   if (refraction_index > 0) {
@@ -76,8 +82,20 @@ Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_sol
       I += k_transmitted * world->trace(refracted);
     } catch (tot_int_refl_exception) { }
   }
-		
-  Vec3f irr = world->get_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
+	
+  Vec3f irr(0.0, 0.0, 0.0);
+
+  if (!incident.first_intersection) {
+    irr = world->get_global_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
+  } else {
+    Ray diffuse = reflected_ray(incident, N);
+    world->first_intersection(diffuse);
+    if (diffuse.did_hit()) {
+      irr = world->get_global_photon_map()->irradiance_estimate(diffuse.get_position(), diffuse.intersected()->get_normal(diffuse.get_position()), 5.0, 200);
+    }
+  }
+
+  I += k_diffuse * world->get_caustic_photon_map()->irradiance_estimate(incident.get_position(), N, 0.2, 200);
 
   I += k_diffuse * irr;
 
@@ -120,8 +138,12 @@ Ray refracted_ray(const Ray& r, const CGLA::Vec3f& N, float refi) {
 
 void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power, const bool is_solid) const
 {
+  if (r.caustic) {
+    trace_caustic_photon(r, normal, power, is_solid);
+    return;
+  }
   if (k_diffuse > 0) {
-    world->get_photon_map()->store(power, r.get_position(), r.get_direction());
+    world->get_global_photon_map()->store(power, r.get_position(), r.get_direction());
   }
 
   Vec3f N;
@@ -156,6 +178,44 @@ void Surface::trace_photon(const Ray& r, const Vec3f& normal, const Vec3f& power
       Ray reflect = reflected_ray(r, N);
       world->trace_photon(reflect, power);
     }
+  }
+  // refraction
+  else if(random < k_reflected + k_transmitted) {
+    try {
+      Ray refracted = refracted_ray(r, N, refraction_index);
+
+      world->trace_photon(refracted, power);
+
+      Ray reflected = reflected_ray(r, N);
+
+      world->trace_photon(reflected, power);
+    } catch (tot_int_refl_exception) { }
+  }
+}
+
+void Surface::trace_caustic_photon(const Ray& r, const Vec3f& normal, const Vec3f& power, const bool is_solid) const
+{
+  if (k_diffuse > 0) {
+    world->get_caustic_photon_map()->store(power, r.get_position(), r.get_direction());
+
+    return;
+  }
+
+  Vec3f N;
+
+  // The normal must point outwards
+  if (dot(normal, r.get_direction()) > 0) {
+    N = - normal;
+  } else {
+    N = normal;
+  }
+
+  float random = rand01();
+
+  // diffuse reflection
+  if (random < k_reflected) {
+    Ray reflect = reflected_ray(r, N);
+    world->trace_photon(reflect, power);
   }
   // refraction
   else if(random < k_reflected + k_transmitted) {

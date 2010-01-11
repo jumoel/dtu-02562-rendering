@@ -8,6 +8,9 @@
 #include "PointLightSource.h"
 #include "PhotonMap.h"
 
+#define MAX_GLOBAL_PHOTONS 1000
+#define MAX_CAUSTIC_PHOTONS 100000
+
 typedef std::vector<Object3D*>::iterator    Object3DPtrIterator;
 typedef std::vector<LightSource*>::iterator LightSourcePtrIterator;
 
@@ -25,6 +28,7 @@ class World
   std::vector<LightSource*> light_source_list;
   
 	/// Photon map storing photons used for caustics.
+  Photon_map global_photons;
 	Photon_map caustic_photons;
 
 	/// Ambient colour
@@ -38,7 +42,8 @@ public:
   
 	World():
 		object_list(0), light_source_list(0),
-		caustic_photons(100000)
+		caustic_photons(MAX_CAUSTIC_PHOTONS),
+    global_photons(MAX_CAUSTIC_PHOTONS)
 	{};
 
 	/// Set & get ambient level
@@ -55,7 +60,11 @@ public:
 		light_source_list.push_back(ls);
 	};
 
-  Photon_map* get_photon_map() {
+  Photon_map* get_global_photon_map() {
+    return &global_photons;
+  }
+
+  Photon_map* get_caustic_photon_map() {
     return &caustic_photons;
   }
 

@@ -26,8 +26,9 @@ CGLA::Vec3f World::trace(Ray& ray)
     return background;
 
 	first_intersection(ray);
-	if (ray.did_hit())
+  if (ray.did_hit()) {
 		return (ray.intersected())->shade(ray);
+  }
 
 	// Return the background color.
 	return background;

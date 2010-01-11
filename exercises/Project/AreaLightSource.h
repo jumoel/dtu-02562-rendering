@@ -31,7 +31,9 @@ public:
   }
   
 	CGLA::Vec3f get_position();
-	CGLA::Vec3f get_normal();
+  CGLA::Vec3f get_normal() const {
+    return normal;
+  }
   void emit_photons();
 
   int get_no_samples() const {return (num_samples + 1) * (num_samples + 1);}

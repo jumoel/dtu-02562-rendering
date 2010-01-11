@@ -1,0 +1,110 @@
+
+\chapter{Projekt: Udvidelse af \emph{photon mapping}}
+\label{cha:project}
+
+I vores projekt valgte vi at udvide raytraceren til understøtte den
+fulde \emph{photon map}-algoritme. Derudover har vi implementeret
+firkantede \emph{area lights}.
+
+\section{Area lights}
+\label{sec:area-lights}
+
+\emph{Area lights} er lyskilder, der har en størrelse. Derudover
+udsender de ikke lys i alle retninger, men kun i en forudbestemt
+retning (dvs. ligesom en ``normal'' loftslampe i virkeligheden).
+
+En af ``sideeffekterne'' ved at bruge \emph{area lights} er, at
+skygger bliver bløde, da et punkt kan være være belyst af en del af
+lampen i stedet for enten at være i fuldkommen skygge eller fuldkommen
+lys.
+
+\emph{Arealights} er inddelt i et antal \emph{sample}punkter, fordel
+over hele overfladen. Når der \emph{traces}, skal hvert punkt
+undersøge om det ligger i lys én gang for hvert \emph{sample}punkt på
+lyskilden. Det gør naturligvis, at renderingstiden forøges, men
+billedkvaliteten forøges også, idet skygger og lyseffekter bliver mere
+realistiske.
+
+[ figur ]
+
+Ligeledes skal der ved fotonudsendelse udsendes lige mange fotoner fra
+alle \emph{samples}. Dette gøres ved at udsende én foton fra første
+samplepunkt, én foton fra næste samplepunkt og så fremdeles til alle
+samplepunkter er besøgt, hvorefter der startes forfra.
+
+For simplicitetens skyld, understøtter vi kun firkantede
+\emph{arealights}.
+
+Vores scene renderet med \emph{photon mapping} og et \emph{area light}
+i stedet for et punktlys kan ses på figur
+\ref{fig:arealights_all}. Bemærk, at \emph{ambient}-lys er fjernet fra
+scenen.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/project/01-arealights_with_all.png}
+  \caption{\emph{Arealights} tilføjet vores raytracer fra ugeopgave 9}
+  \label{fig:arealights_all}
+\end{figure}
+
+\section{Den fulde \emph{photon mapping} algoritme}
+\label{sec:den-fulde-photon}
+
+Trinnet, der manglede fra for at have implementeret den fulde \emph{photon
+map}-algoritme, var \emph{final gather}. \emph{Final gather} er at
+erstatte opslaget i \emph{photon mappet} ved det første \emph{ray}-hit
+med en Monte Carlo-integration af det indirekte diffuse lys i punktet.
+
+Dette har vi gjort ved at udsende en reflekteret stråle fra
+hit-punktet og slå op i \emph{photon mappet} hvis den reflekterede
+stråle ramte et andet objekt. Opslaget blev lavet med en større radius
+end et normalt opslag. Dette sker, for at erstatte højfrekvens-støj i
+\emph{photon mappet} med lavfrekvens-støj fra ``integrationen''. Det
+tillader os at udsende færre fotoner og samtidig opnå en visuel
+kvalitet der stadig er god. Ulempen ved dette er, at \emph{caustics}
+samt direkte lys forsvinder. Det direkte lys kan dog simpelt gendannes
+vha. den normale raytracing-metode. En rendering foretaget med $1000$
+fotoner uden \emph{final gather} kan ses på figur
+\ref{fig:1000_no_final_gather} mens en rendering med $1000$ fotoner og
+\emph{final gather} kan ses på figur \ref{fig:1000_final_gather}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/project/02-1000_photons.png}
+  \caption{1000 fotoner uden \emph{final gather}}
+  \label{fig:1000_no_final_gather}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/project/03-1000_photons_final_gather.png}
+  \caption{1000 fotoner med \emph{final gather}}
+  \label{fig:1000_final_gather}
+\end{figure}
+
+\subsection{Gendannelse af \emph{caustics}}
+\label{sec:gend-af-caust}
+
+For at få \emph{caustics} til at vise sig på det renderede billede
+igen, skal der genereres et seperat \emph{caustic photon map}. Dette
+gøres ved kun at gemme de fotoner, der har været igennem en
+$L~S^+~D$-vej. Samtidig skal man sørge for at disse fotonveje ikke
+gemmes i det normale \emph{photon map}. Når \emph{tracingen}
+foretages, laves der et opslag i \emph{caustic photon mappet} og
+resultatet herfra bruges sammen med de øvrige bidrag til at bestemme
+den endelige farve.
+
+Resultatet af det seperate \emph{caustic photon map} kan ses på figur
+\ref{fig:caustic_photon_map}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/project/04-caustic_map.png}
+  \caption{Seperat \emph{caustic photon map}}
+  \label{fig:caustic_photon_map}
+\end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 

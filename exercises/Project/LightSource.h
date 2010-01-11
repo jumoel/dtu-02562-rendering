@@ -34,7 +34,7 @@ public:
 		intensities(_intensities) {}
 		 
 	/// Return the position of the light source
-	virtual CGLA::Vec3f get_position() const = 0;
+	virtual CGLA::Vec3f get_position() = 0;
 
 	/** Get the normal to the light source. This only makes sense for 
 	non point light sources. */
