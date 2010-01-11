@@ -3,17 +3,13 @@
 
 #include "World.h"
 #include "Surface.h"
+#include "mathfuncs.h"
 
 using namespace CGLA;
 using namespace std;
 using namespace CMN;
 
 class tot_int_refl_exception { };
-
-float rand01()
-{
-  return rand()/static_cast<float>(RAND_MAX);
-}
 
 Vec3f Surface::shade(const Ray& incident, const Vec3f& normal, const bool is_solid) const
 {

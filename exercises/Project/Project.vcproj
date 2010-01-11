@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\mathfuncs.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PhotonMap.cpp"
 				>
 			</File>
@@ -275,6 +279,10 @@
 			</File>
 			<File
 				RelativePath=".\LightSource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\mathfuncs.h"
 				>
 			</File>
 			<File

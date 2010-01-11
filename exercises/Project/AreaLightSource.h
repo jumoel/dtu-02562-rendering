@@ -33,6 +33,8 @@ public:
 	CGLA::Vec3f get_position();
 	CGLA::Vec3f get_normal();
   void emit_photons();
+
+  int get_no_samples() const {return (num_samples + 1) * (num_samples + 1);}
 		
 	bool is_point_source() const {return false;}
 };
