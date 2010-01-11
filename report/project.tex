@@ -23,14 +23,28 @@ over hele overfladen. Når der \emph{traces}, skal hvert punkt
 undersøge om det ligger i lys én gang for hvert \emph{sample}punkt på
 lyskilden. Det gør naturligvis, at renderingstiden forøges, men
 billedkvaliteten forøges også, idet skygger og lyseffekter bliver mere
-realistiske.
+realistiske. En illustration af, hvordan vi itererer over
+\emph{sample}-punkter på et \emph{area light} kan ses på figur
+\ref{fig:arealight_diagram}.
 
-[ figur ]
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/project/arealight.png}
+  \caption{Metode til at iterere over \emph{sample}-punkter på et
+    \emph{area light}.}
+  \label{fig:arealight_diagram}
+\end{figure}
 
 Ligeledes skal der ved fotonudsendelse udsendes lige mange fotoner fra
 alle \emph{samples}. Dette gøres ved at udsende én foton fra første
 samplepunkt, én foton fra næste samplepunkt og så fremdeles til alle
-samplepunkter er besøgt, hvorefter der startes forfra.
+samplepunkter er besøgt, hvorefter der startes forfra. I midsætning
+til et punktlys udsendes fotoner ikke ligeligt i alle retninger, men
+cosinusfordelt i normalvektorens retning, som påkrævet iflg. ``A
+Practical Guide to Global Illumination using Photon Maps''. Metoden
+til at generere cosinusdistribuerede retningsvektorer er beskrevet i
+den vedlagte PDF-fil ``cosineDist3D.pdf'', der stammer fra
+forelæsningsslides fra Dartmouth College i USA.
 
 For simplicitetens skyld, understøtter vi kun firkantede
 \emph{arealights}.
@@ -43,7 +57,7 @@ scenen.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=8cm]{screenshots/project/01-arealights_with_all.png}
-  \caption{\emph{Arealights} tilføjet vores raytracer fra ugeopgave 9}
+  \caption{\emph{Arealights} tilføjet vores raytracer fra ugeopgave 8-9}
   \label{fig:arealights_all}
 \end{figure}
 
