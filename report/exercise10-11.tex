@@ -1,0 +1,90 @@
+\chapter{Ugeopgave 10-11}
+\label{cha:ugeopgave-10-11}
+
+Denne ugeopgaves formål var at gøre os bekendte med \emph{texture
+  mapping}.
+
+\section{Del 1}
+\label{sec:del-1-3}
+
+Vi har indsat \texttt{load\_ppm}-funktionen fra
+forelæsningsslidesne\footnote{Samtidig har vi rettet funktionen, så
+  den rent faktisk kan læse \texttt{PPM}-filer ved at ændre
+  \emph{magic}-indlæsningen fra tre til to tegn.}. Samtidig har vi
+gjort det muligt at angive en teksturfil når man laver en
+\textsl{surface}.
+
+\section{Del 2}
+\label{sec:del-2-2}
+
+Ud fra formlerne på forelæsningsslidesne har vi beregnet de sfæriske
+koordinater for et eventuelt sammenfaldspunkt mellem udsendte stråler
+og kuglen. Disse har vi efterfølgende skaleret til intervallet
+$[0;1]$ og gemt i den udsendte stråle.
+
+\section{Del 3}
+\label{sec:del-3-2}
+
+Tekstur\emph{lookup} er baseret på de udregninger, der var givet på
+forelæsningsslidesne. Teksturkoordinaterne ($[0;1]\times[0;1]$) bliver omdannet
+til billedkoordinater (fx $[[0;63]\times[0;63]$), hvorefter farverne
+på det koordinat bliver læst ind og returneret.
+
+Hvis der ikke er nogen teksturfil indlæst, returneres blot grundfarven
+for objektet.
+
+\section{Del 4}
+\label{sec:del-4-2}
+
+Ved tilføjelse af tekstur\emph{lookup} i \texttt{shade}-funktionen fik
+vi et billede, der kan ses på figur \ref{fig:sphere}. Bemærk, at \emph{ambient}
+lys, \emph{lambertian}- og \emph{Phongshading} samt reflektion og
+refraktion er fjernet fra raytraceren for bedre at kunne se, om
+teksturerne blev indlæst korrekt.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/exc10-11/sphere.png}
+  \caption{Tekstur på en kugle}
+  \label{fig:sphere}
+\end{figure}
+
+\section{Del 5}
+\label{sec:del-5-2}
+
+For at \emph{mappe} trekantkoordinater til en firkantet tekstur laver
+vi et par simplificeringer.
+
+I det plan, der udspændes af de trekanten gør vi følgende:
+
+\begin{itemize}
+\item Den først angivne knude i trekanten vil blive placeret i $(0,0)$.
+\item Den næste angivne knude i trekanten vil blive placeret i
+  $(X,0)$, hvor $X$ er længden af vektoren fra den første knude til
+  denne knude.
+\end{itemize}
+
+Derefter beregner vi den tredje knudes placering i planet ud fra
+vinklen mellem vektorerne $v_0 \rightarrow v_1$ og $v_0 \rightarrow
+v_2$ samt længden på vektoren $v_0 \rightarrow v_2$.
+
+Dernæst finder vi det mindste kvadrat, der kan indeholde hele
+trekanten i planet. Hvert koordinat deles med kvadratsidelængden,
+hvormed alle koordinater vil være i intervallet $[0;1]$.
+
+Til sidst beregnes tekstur-koordinaterne, ved hjælp af de barycentriske
+koordinater, ud fra formlen givet på forelæsningsslidesne.
+
+Et billede af en trekant med en tekstur kan ses på figur \ref{fig:triangle}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=8cm]{screenshots/exc10-11/triangle.png}
+  \caption{Tekstur på en trekant}
+  \label{fig:triangle}
+\end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_main"
+%%% End: 
