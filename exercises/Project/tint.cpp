@@ -189,8 +189,6 @@ int main(int argc, char* argv[])
   ls->emit_photons();
   printf("Done!\n");
   printf("Photon map took %f seconds\n", timer.get_secs());
-  printf("Global photon map contains %d elements\n", w->get_global_photon_map()->getPhotonCount());
-  printf("Caustic photon map contains %d elements\n", w->get_caustic_photon_map()->getPhotonCount());
 
 	
 	// ---------------------------------------------------------------------- 
