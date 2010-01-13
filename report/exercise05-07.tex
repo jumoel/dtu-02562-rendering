@@ -1,10 +1,20 @@
 
 \chapter{Ugeopgave 5-7}
 
+Denne ugeopgaves formål var at implementere og forstå
+\emph{radiosity}-metoden.
+
+\paragraph{Bemærk}
+\label{sec:bemark}
+
+Dele af den eksekverbare fil (del 5 og 6) til denne opgave virker ikke
+på de gamle maskiner i VR-baren. De virker dog på de nye. Vi har ikke
+kunnet finde grunden til det.
+
 \section{Del 1}
 \label{sec:ex5-1}
 
-Første opgave er at downloade kldekoden og compile den. Det skulle
+Første opgave er at downloade kildekoden og compile den. Det skulle
 vise cornell scenen med uden radiosity. Scenen kan ses på figur
 \ref{figur-5-1-1}.
 
@@ -35,20 +45,14 @@ I 3. del af opgaven skal vi lave \textit{progressive refinement}. Det
 kræver at vi implementerer følgende funktioner som skal bruger i hver
 itteration af main loopet:
 
-
 \begin{itemize}
-
 \item En funktion der finder den \textit{patch} med størst energi.
-
 \item En funktion der udregner \textit{form factors} mellem en
   \textit{patch} og alle de andre \textit{patches}. Dette gøres
   analytisk.
-
 \item En funktion der distribuerer energi fra en \textit{patch} til
   alle andre \textit{patches}
-
 \item En funktion der beregner farven af alle \textit{patches}.
-
 \end{itemize}
 
 Resultatet kan ses på figur \ref{figur-5-3-1}. Billedet viser tydeligt
@@ -152,8 +156,6 @@ alle der skal regnes langt mere.
 bla. kan ses ved farvernes \texttt{bleed}, i modsætning til ray
 tracing. \texttt{Radiosity} kan håndtere LD*E hvor ray tracing bruger
 LD?S*E.
-
-
 
 %%% Local Variables: 
 %%% mode: latex
