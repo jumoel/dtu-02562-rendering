@@ -8,7 +8,7 @@ Denne ugeopgaves formål var at gøre os bekendte med \emph{texture
 \label{sec:del-1-3}
 
 Vi har indsat \texttt{load\_ppm}-funktionen fra
-forelæsningsslidesne\footnote{Samtidig har vi rettet funktionen, så
+forelæsningsslidesne\footnote{Desuden har vi rettet funktionen, så
   den rent faktisk kan læse \texttt{PPM}-filer ved at ændre
   \emph{magic}-indlæsningen fra tre til to tegn.}. Samtidig har vi
 gjort det muligt at angive en teksturfil når man laver en
@@ -19,14 +19,14 @@ gjort det muligt at angive en teksturfil når man laver en
 
 Ud fra formlerne på forelæsningsslidesne har vi beregnet de sfæriske
 koordinater for et eventuelt sammenfaldspunkt mellem udsendte stråler
-og kuglen, hvis sammenfaldspunktet endnu var det nærmeste. Disse har
-vi efterfølgende skaleret til intervallet $[0;1]$ gemt i den udsendte
-stråle.
+og kuglen, men kun hvis sammenfaldspunktet endnu var det
+nærmeste. Disse har vi efterfølgende skaleret til intervallet $[0;1]$
+gemt i den udsendte stråle.
 
 \section{Del 3}
 \label{sec:del-3-2}
 
-Tekstur\emph{lookup} er baseret på de udregninger, der var givet på
+Teksturopslag er baseret på de udregninger, der var givet på
 forelæsningsslidesne. Teksturkoordinaterne ($[0;1]\times[0;1]$) bliver omdannet
 til billedkoordinater (fx $[[0;63]\times[0;63]$), hvorefter farverne
 på det koordinat bliver læst ind og returneret.
@@ -37,11 +37,11 @@ for objektet.
 \section{Del 4}
 \label{sec:del-4-2}
 
-Ved tilføjelse af tekstur\emph{lookup} i \texttt{shade}-funktionen fik
-vi et billede, der kan ses på figur \ref{fig:sphere}. Bemærk, at \emph{ambient}
-lys, \emph{lambertian}- og \emph{Phongshading} samt reflektion og
-refraktion er fjernet fra raytraceren for bedre at kunne se, om
-teksturerne blev indlæst korrekt.
+Ved tilføjelse af teksturopslag i \texttt{shade}-funktionen fik vi et
+billede, der kan ses på figur \ref{fig:sphere}. Bemærk, at
+\emph{ambient} lys, \emph{lambertian}- og \emph{Phongshading} samt
+reflektion og refraktion er fjernet fra raytraceren for bedre at kunne
+se, om teksturerne blev indlæst korrekt.
 
 \begin{figure}[htbp]
   \centering

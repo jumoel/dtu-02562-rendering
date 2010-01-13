@@ -20,25 +20,25 @@ Disse stråleudsendinger kan stoppes ved forskellige kriterier:
 \begin{itemize}
 \item Hvis strålen rammer en perfekt diffus overflade (da der ellers
   skulle udsendes stråler i alle retninger og dermed uendeligt mange)
-\item Hvis strålen er over en hvis generation (dvs. at der fx fra Ã¸jet
+\item Hvis strålen er over en hvis generation (dvs. at der fx fra øjet
   maksimalt udsendes 5 stråler, for at finde værdien af én pixel)
 \item Hvis strålens energi ligger under en forudbestemt tærskel for
   minimumsenergi
 \end{itemize}
 
-\section{Del 1: UML-diagram}
+\section{Del 1}
 \label{sec:del-1:-uml}
 
-Et begrænset UML-diagram over den udleverede raytracer kan ses på figur:
+Et begrænset UML-diagram over den udleverede raytracer kan ses på figur \ref{fig:UML-diagram}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=8cm]{screenshots/exc1-3/UML.png}
+  \includegraphics[width=12cm]{screenshots/exc1-3/UML.png}
   \caption{UML-diagram}
-  \label{fig:ambient}
+  \label{fig:UML-diagram}
 \end{figure}
 
-\section{Del 2: Shade-funktionalitet}
+\section{Del 2}
 \label{sec:shade-funktionalitet}
 
 I raytraceren er de fem følgende termer implementeret:
@@ -52,8 +52,7 @@ I raytraceren er de fem følgende termer implementeret:
 \end{itemize}
 
 De første tre er lokale betragtninger, og kræver derfor ikke
-rekursion, idet det ikke er nødvendigt at betragte resten af scenen
-for at beregne dem.
+rekursion.
 
 I vores implementering, udsendes der ikke ``børnestråler'' ved perfekt
 diffuse overflader og desuden stoppes strålerne efter 5 generationer.
@@ -74,7 +73,7 @@ lysbidrag.
   \label{fig:nolight}
 \end{figure}
 
-\paragraph{Omgivende lys}
+\paragraph{Omgivende lys:}
 \label{sec:omgivende-lys}
 
 Dette er implementeret ved at multiplicere scenens omgivende lys med
@@ -89,7 +88,7 @@ På figur \ref{fig:ambient} ses scenen med omgivende lys tilsat.
   \label{fig:ambient}
 \end{figure}
 
-\paragraph{Diffus reflektion}
+\paragraph{Diffus reflektion:}
 \label{sec:diffus-reflektion}
 
 Dette er implementeret direkte fra formlen, der er givet i bogen:
@@ -111,7 +110,7 @@ reflektion.
   \label{fig:diffus}
 \end{figure}
 
-\paragraph{Specular (phong) highlights}
+\paragraph{Specular (phong) highlights:}
 \label{sec:spec-phong-highl}
 
 Dette er ligeledes implementeret direkte fra formlen i bogen:
@@ -132,18 +131,18 @@ belysning.
   \label{fig:phong}
 \end{figure}
 
-\paragraph{Specular reflektion}
+\paragraph{Specular reflektion:}
 \label{sec:specular-reflektion}
 
 Hvis overfladen, strålen rammer ikke er perfekt diffus (dvs. hvis
-\texttt{k\_diffuse < 1}, udsendes der en ekstra stråle, hvis retning
+\texttt{k\_diffuse < 1}), udsendes en ekstra stråle, hvis retning
 er beregnet ud fra følgende formel fra bogen:
 %
 \[
 \mathbf{R} = 2 (\mathbf{N} \cdot \mathbf{L})\mathbf{N} - \mathbf{L}
 \]
 %
-Strålen får desuden inkrementeret sin niveau med én. Dette bruges til
+Strålen får desuden forøget sit niveau med én. Dette bruges til
 at stoppe rekursionen, når den har nået en vis dybde.
 %
 På figur \ref{fig:reflektion} ses scenen med lokal belysning samt
@@ -156,7 +155,7 @@ reflektion.
   \label{fig:reflektion}
 \end{figure}
 
-\paragraph{Transmission}
+\paragraph{Transmission:}
 \label{sec:transmission}
 
 Hvis overfladen, strålen rammer, har \texttt{refraction\_index > 0}
@@ -167,8 +166,8 @@ Strålens retning er ikke bestemt ud fra formlen i bogen, men fra en
 udledt, ækvivalent formel, beskrevet i artiklen ``Derivation of
 Refraction Formulas''\footnote{Skrevet af Paul S. Heckbert. Artiklen
   stammer fra ``Introduction to Ray Tracing'', (Andrew Glassner, ed.),
-  Academic Press, London, 1989, side 263-293. Artiklen er vedlagt på
-  CD.}.
+  Academic Press, London, 1989, side 263-293. Artiklen er vedlagt i
+  ``refr.pdf''.}.
 %
 \[
   c_1 = - \mathbf{I} \cdot \mathbf{N}
@@ -192,10 +191,10 @@ reflektion samt transmission.
   \label{fig:transmission}
 \end{figure}
 
-\section{Del 3: Raytracerteori}
+\section{Del 3}
 \label{sec:del-3:-raytr}
 
-\paragraph{Tre metoder til at forøge hastigheden på algoritmen}
+\paragraph{Tre metoder til at forøge hastigheden på algoritmen:}
 \label{sec:giv-tre-metoder}
 
 Idet det er undersøgelsen af hvorvidt en stråle rammer en figur, der
@@ -209,7 +208,7 @@ placeringer ved objekterne i en scene. Disse kunne fx være:
 \item Octræer (\emph{octrees})
 \end{itemize}
 
-\paragraph{Forklaring af, hvordan accelerationen foregår}
+\paragraph{Forklaring af, hvordan accelerationen foregår:}
 \label{sec:forkl-af-hvord}
 
 Basalt set, er det hurtigere at undersøge om en stråle går igennem en
@@ -230,7 +229,7 @@ om strålen rammer netop de objekter, der er i den specifikke
 del. Dette er i modsætning til den naive algoritme, der for hver
 stråle undersøger om hvert enkelt objekt rammes.
 
-\paragraph{Forklaring af hvordan raytracing kan bruges til \emph{hidden surface removal}}
+\paragraph{Forklaring af hvordan raytracing kan bruges til \emph{hidden surface removal}:}
 \label{sec:forkl-af-hvord-1}
 
 Når en stråle rammer flere objekter, vil det udelukkende være det
@@ -239,15 +238,15 @@ vil altså smides bort. Dette resulterer i, at det kun vil være det
 forreste objekt der tegnes, og dermed er \emph{hidden surface removal}
 opnået.
 
-\paragraph{Forklaring af hvordan \emph{point shading} kan bruges i raytracing}
+\paragraph{Forklaring af hvordan \emph{point shading} kan bruges i raytracing:}
 \label{sec:forkl-af-hvord-2}
 
 En \emph{point shading}-metode, såsom Phongs, kan bruges til at
 beregne den lokale belysning i et punkt. Da hver stråle beregnes
-rekursivt, kan \emph{point sading}-metoder bruges til at akkumulere
+rekursivt, kan \emph{point shading}-metoder bruges til at akkumulere
 lokale belysninger, der kan observeres fra et punkt.
 
-\paragraph{Betydningen af at placere øjet uendeligt langt væk}
+\paragraph{Betydningen af at placere øjet uendeligt langt væk:}
 \label{sec:betydningen-af-at}
 
 Hvis øjet bliver placeret uendeligt langt væk, vil alle stråler blive
@@ -256,11 +255,11 @@ kan vi bruge parallel projektion af scenen over på vores \emph{view
   plane}, og dermed straks have det første objekt, hver stråle
 rammer. Desuden kan vi lave en ret lille omgivende kasse for scenen.
 
-Desværre kan vi ikke beskære objekter til vores \emph{view volume}
+Desværre kan vi ikke beskære objekter til vores \emph{view volume} og
 fjerne bagsider af objekter (\emph{back-face culling}), da strålerne
 udsendes rekursivt.
 
-\paragraph{Problemer ved at bruge raytracing på fx NURBS-overflader}
+\paragraph{Problemer ved at bruge raytracing på fx NURBS-overflader:}
 \label{sec:problemer-ved-at}
 
 Selvom NURBS-overflader er eksakte, analytiske og meget pladsmæssigt
@@ -270,33 +269,32 @@ omdanne overfladerne til polygoner, men NURBS-overflader skal bruge
 mange polygoner for at få en god approksimation, og
 krydspunktsberegningerne vil derfor stadig være dyre.
 
-\paragraph{Metode til repræsentering af solide objekter til visualisering i en raytracer}
+\paragraph{Metode til repræsentering af solide objekter til visualisering i en raytracer:}
 \label{sec:metode-til-repr}
 
 Den mest hensigtsmæssige metode til repræsentering af solide objekter,
 der jvf. det tidligere afsnit om hastighedsforøgelse, er at dele
-objekterne op i ikkeoverlappende, primitive dele, idet
+objekterne op i ikke overlappende, primitive dele, idet
 krydspunktsundersøgelse for disse er billige. Endvidere kan objekterne
 på denne måde direkte repræsenteres af datastrukturer som fx octræer
 eller bsp-træer, hvilket vil gøre raytracerens arbejde betydeligt
 lettere.
 
-\section{Del 4: Udvidelse af raytraceren}
+\section{Del 4}
 \label{sec:del-4:-udvidelse}
 
-Vores udvidelse af raytraceren er ganske simpel, idet vi 1) ikke ville
-bruge for meget tid på udvidelsen og 2) gerne ville have noget
-interessant at implementere til det endelige projekt.
+Vores udvidelse af raytraceren er ganske simpel.
 
-Derfor har vi blot valgt at implementere hårde skygger i vores
-raytracer. De er implementeret på følgende måde:
+Vi har valgt at implementere skygger i vores raytracer. De er
+implementeret på følgende måde:
 
 Når en stråle rammer noget, udsendes der en stråle direkte mod
 lyskilden fra ``nedslagspunktet''. Rammer denne anden stråle et
 objekt, ligger nedslagspunktet i skygge og de lokale lysbidrag (diffus
 reflektion og Phong highlights) medregnes ikke.
 %
-På figur \ref{fig:hardshadow} ses den endelige scene, tilsat hårde skygger.
+På figur \ref{fig:hardshadow} ses den endelige scene, tilsat skygger.
+Skyggerne bliver hårde idet den eneste lyskilde i scenen er et punktlys.
 
 \begin{figure}[htbp]
   \centering

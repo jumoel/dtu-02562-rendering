@@ -18,7 +18,7 @@ skygger bliver bløde, da et punkt kan være være belyst af en del af
 lampen i stedet for enten at være i fuldkommen skygge eller fuldkommen
 lys.
 
-\emph{Arealights} er inddelt i et antal \emph{sample}punkter, fordel
+\emph{Arealights} er inddelt i et antal \emph{sample}punkter, fordelt
 over hele overfladen. Når der \emph{traces}, skal hvert punkt
 undersøge om det ligger i lys én gang for hvert \emph{sample}punkt på
 lyskilden. Det gør naturligvis, at renderingstiden forøges, men
@@ -38,7 +38,7 @@ realistiske. En illustration af, hvordan vi itererer over
 Ligeledes skal der ved fotonudsendelse udsendes lige mange fotoner fra
 alle \emph{samples}. Dette gøres ved at udsende én foton fra første
 samplepunkt, én foton fra næste samplepunkt og så fremdeles til alle
-samplepunkter er besøgt, hvorefter der startes forfra. I midsætning
+samplepunkter er besøgt, hvorefter der startes forfra. I modsætning
 til et punktlys udsendes fotoner ikke ligeligt i alle retninger, men
 cosinusfordelt i normalvektorens retning, som påkrævet iflg. ``A
 Practical Guide to Global Illumination using Photon Maps''. Metoden
@@ -52,7 +52,7 @@ For simplicitetens skyld, understøtter vi kun firkantede
 Vores scene renderet med \emph{photon mapping} og et \emph{area light}
 i stedet for et punktlys kan ses på figur
 \ref{fig:arealights_all}. Bemærk, at \emph{ambient}-lys er fjernet fra
-scenen.
+scenen. Læg mærke til at \emph{caustics} er ændret ift. punktlyset.
 
 \begin{figure}[htbp]
   \centering
@@ -64,7 +64,7 @@ scenen.
 \section{Den fulde \emph{photon mapping} algoritme}
 \label{sec:den-fulde-photon}
 
-Trinnet, der manglede fra for at have implementeret den fulde \emph{photon
+Trinnet, der manglede for at have implementeret den fulde \emph{photon
 map}-algoritme, var \emph{final gather}. \emph{Final gather} er at
 erstatte opslaget i \emph{photon mappet} ved det første \emph{ray}-hit
 med en Monte Carlo-integration af det indirekte diffuse lys i punktet.
@@ -102,14 +102,17 @@ fotoner uden \emph{final gather} kan ses på figur
 For at få \emph{caustics} til at vise sig på det renderede billede
 igen, skal der genereres et seperat \emph{caustic photon map}. Dette
 gøres ved kun at gemme de fotoner, der har været igennem en
-$L~S^+~D$-vej. Samtidig skal man sørge for at disse fotonveje ikke
+$LS^+D$-vej. Samtidig skal man sørge for at disse fotonveje ikke
 gemmes i det normale \emph{photon map}. Når \emph{tracingen}
 foretages, laves der et opslag i \emph{caustic photon mappet} og
 resultatet herfra bruges sammen med de øvrige bidrag til at bestemme
 den endelige farve.
 
 Resultatet af det seperate \emph{caustic photon map} kan ses på figur
-\ref{fig:caustic_photon_map}.
+\ref{fig:caustic_photon_map}. Læg mærke til, at resultatet ligner
+figur \ref{fig:arealights_all}. Forskellen i lysstyrke skyldes at
+figur \ref{fig:arealights_all} ikke havde slået \textit{ambient light}
+til.
 
 \begin{figure}[htbp]
   \centering
